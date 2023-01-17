@@ -1,9 +1,13 @@
 
 import 'package:flutter/material.dart';
+import "package:provider/provider.dart";
 import 'package:flutter/services.dart';
+import 'package:registrador_de_desejos/data/models/desire.dart';
+import 'package:registrador_de_desejos/data/services/desire_dao.dart';
 import 'package:registrador_de_desejos/pages/utils/form_desire_routed_arguments.dart';
 import 'package:registrador_de_desejos/pages/widgets/app_bottom_navigation_bar.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:registrador_de_desejos/providers/app_navigation_provider.dart';
 
 class FormDesire extends StatefulWidget {
 
@@ -19,9 +23,30 @@ class _FormDesire extends State<FormDesire>{
   bool desireDone = false;
 
   final TextEditingController numberController = TextEditingController();
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  String colorString = "";
+
+  Color convertStringToColor(String stringColor){
+    var hexColor = stringColor.replaceAll("#", "");
+    if(hexColor.length == 6){
+      hexColor= "FF"+hexColor;
+    }
+    if(hexColor.length == 8){
+      return Color(int.parse("0x$hexColor"));
+    }
+    return Colors.black45;
+  }
+
+  String convertColorToString(Color color){
+    return "#${color.value.toRadixString(16).substring(2,8)}";
+  }
 
   void changeColor(Color color) {
-    setState(() => colorForDesire = color);
+    setState(() {
+      colorForDesire = color;
+      colorString = convertColorToString(color);
+    });
   }
 
   void showColorDialog(){
@@ -58,13 +83,9 @@ class _FormDesire extends State<FormDesire>{
     final MaterialStateProperty<Color?> doneColor =
     MaterialStateProperty.resolveWith<Color?>(
           (Set<MaterialState> states) {
-        // Track color when the switch is selected.
         if (states.contains(MaterialState.selected)) {
-          return Colors.blue;
+          return Colors.amber;
         }
-        // Otherwise return null to set default track color
-        // for remaining states such as when the switch is
-        // hovered, focused, or disabled.
         return null;
       },
     );
@@ -74,7 +95,7 @@ class _FormDesire extends State<FormDesire>{
           (Set<MaterialState> states) {
         // Material color when switch is selected.
         if (states.contains(MaterialState.selected)) {
-          return Colors.blue.withOpacity(0.54);
+          return Colors.amber.withOpacity(0.54);
         }
         // Material color when switch is disabled.
         if (states.contains(MaterialState.disabled)) {
@@ -105,6 +126,7 @@ class _FormDesire extends State<FormDesire>{
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
+                      controller: titleController,
                       decoration: InputDecoration(
                           labelText: "Título do desejo"
                       ),
@@ -113,6 +135,7 @@ class _FormDesire extends State<FormDesire>{
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
+                      controller: descriptionController,
                       decoration: InputDecoration(
                           labelText: "Descrição do desejo"
                       ),
@@ -201,6 +224,23 @@ class _FormDesire extends State<FormDesire>{
                         )
                       ],
                     )
+                  ),
+                  ElevatedButton(
+                      onPressed: (){
+                          Desire desire = Desire(
+                            title: titleController.text,
+                            description: descriptionController.text,
+                            desireNumber: int.parse(numberController.text),
+                            desireColor: colorString,
+                            accomplishedDesire: desireDone
+                          );
+
+                          DesireDAO().save(desire);
+
+                          Provider.of<AppNavigationProvider>(context, listen: false).changeScreen(0);
+                          Navigator.of(context).pushReplacementNamed("/home");
+                      },
+                      child: Text("Salvar")
                   )
                 ],
               )
