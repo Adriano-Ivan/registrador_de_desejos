@@ -25,7 +25,8 @@ class AppDrawer extends StatelessWidget{
                     context,
                     "/form_desire",
                     arguments: FormDesireRoutedArguments(
-                      isToEdit: false
+                      isToEdit: false,
+                      desire: null
                     )
                 );
               },

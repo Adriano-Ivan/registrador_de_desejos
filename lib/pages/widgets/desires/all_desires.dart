@@ -60,8 +60,7 @@ class _AllDesires extends State<AllDesires>{
                         final Desire desire = items[index];
 
                         return DesireItem(
-                          title: desire.title,
-                          accomplished: desire.accomplishedDesire,
+                          desire: desire
                         );
                       });
                 }

@@ -11,6 +11,8 @@ class DesireDAO {
       "$_description VARCHAR(256), "
       "$_desireNumber INTEGER, "
       "$_desireColor VARCHAR(10), "
+      "$_targetDate VARCHAR(30), "
+      "$_accomplishedDesireDateItDesireWasAccomplished VARCHAR(30), "
       "$_accomplishedDesire INTEGER)";
 
   static const String _tableName = "desires_table";
@@ -21,6 +23,8 @@ class DesireDAO {
   static const String _desireNumber = "desire_number";
   static const String _desireColor = "desire_color";
   static const String _accomplishedDesire = "accomplished_desire";
+  static const String _targetDate = "target_date";
+  static const String _accomplishedDesireDateItDesireWasAccomplished = "accomplished_desire_date_if_desire_was_accomplished";
 
   save(Desire desire) async {
     final Database database = await getDatabase();
@@ -85,12 +89,25 @@ class DesireDAO {
 
   Desire toObject(Map<String, dynamic> mapDesire){
     return Desire(
+      id: mapDesire[_id],
       title: mapDesire[_title],
       description: mapDesire[_description],
       desireColor: mapDesire[_desireColor],
       desireNumber: mapDesire[_desireNumber],
-      accomplishedDesire: mapDesire[_accomplishedDesire] == 1? true : false
+      accomplishedDesire: mapDesire[_accomplishedDesire] == 1? true : false,
+      targetDate: convertToDate(mapDesire[_targetDate]),
+      accomplishedDesireDateItDesireWasAccomplished: convertToDate(mapDesire[_accomplishedDesireDateItDesireWasAccomplished])
     );
+  }
+
+  DateTime convertToDate(String targetDateString){
+    return DateTime.parse(targetDateString);
+  }
+
+  String convertToDateString(DateTime targetDateObject){
+    return "${targetDateObject.year}-"
+        "${targetDateObject.month.toString().length == 1 ? "0${targetDateObject.month}" : targetDateObject.month}-"
+        "${targetDateObject.day.toString().length == 1 ? "0${targetDateObject.day}" : targetDateObject.day}";
   }
 
   Map<String, dynamic> toMap(Desire desire){
@@ -100,6 +117,8 @@ class DesireDAO {
     mapDesire[_desireColor]  = desire.desireColor;
     mapDesire[_accomplishedDesire] = desire.accomplishedDesire ? 1 : 0;
     mapDesire[_description] = desire.description;
+    mapDesire[_targetDate] = convertToDateString(desire.targetDate);
+    mapDesire[_accomplishedDesireDateItDesireWasAccomplished] = convertToDateString(desire.accomplishedDesireDateItDesireWasAccomplished);
 
     return mapDesire;
   }

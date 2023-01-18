@@ -22,12 +22,12 @@ class _AppBottomNavigationBar extends State<AppBottomNavigationBar>{
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
-          label: 'Desejos',
+          label: "Desejos",
           backgroundColor: Colors.red,
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.business),
-          label: 'Criar desejo',
+          label: "Salvar desejo",
           backgroundColor: Colors.green,
         ),
       ],
@@ -46,7 +46,8 @@ class _AppBottomNavigationBar extends State<AppBottomNavigationBar>{
             if(index != _selectedIndex){
               Navigator.of(context).pushReplacementNamed("/form_desire",
                   arguments: FormDesireRoutedArguments(
-                      isToEdit: false
+                      isToEdit: false,
+                      desire: null,
                   )
                  );
             }
