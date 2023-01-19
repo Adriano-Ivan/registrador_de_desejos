@@ -96,7 +96,7 @@ class DesireDAO {
       desireNumber: mapDesire[_desireNumber],
       accomplishedDesire: mapDesire[_accomplishedDesire] == 1? true : false,
       targetDate: convertToDate(mapDesire[_targetDate]),
-      accomplishedDesireDateItDesireWasAccomplished: convertToDate(mapDesire[_accomplishedDesireDateItDesireWasAccomplished])
+      accomplishedDesireDateIfDesireWasAccomplished: convertToDate(mapDesire[_accomplishedDesireDateItDesireWasAccomplished])
     );
   }
 
@@ -118,7 +118,7 @@ class DesireDAO {
     mapDesire[_accomplishedDesire] = desire.accomplishedDesire ? 1 : 0;
     mapDesire[_description] = desire.description;
     mapDesire[_targetDate] = convertToDateString(desire.targetDate);
-    mapDesire[_accomplishedDesireDateItDesireWasAccomplished] = convertToDateString(desire.accomplishedDesireDateItDesireWasAccomplished);
+    mapDesire[_accomplishedDesireDateItDesireWasAccomplished] = convertToDateString(desire.accomplishedDesireDateIfDesireWasAccomplished);
 
     return mapDesire;
   }

@@ -6,6 +6,7 @@ import "package:intl/intl.dart";
 import 'package:registrador_de_desejos/data/models/desire.dart';
 import 'package:registrador_de_desejos/data/services/desire_dao.dart';
 import 'package:registrador_de_desejos/pages/utils/color_converter.dart';
+import 'package:registrador_de_desejos/pages/utils/colors_for_accomplishment.dart';
 import 'package:registrador_de_desejos/pages/utils/form_desire_routed_arguments.dart';
 import 'package:registrador_de_desejos/pages/widgets/app_bottom_navigation_bar.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -23,7 +24,12 @@ class _FormDesire extends State<FormDesire>{
   Color colorForDesire = Colors.amber;
   Color currentColor = Colors.amber;
 
+  Desire? desireIfItIsToEdit = null;
+  bool itIsToEdit = false;
+  int? desireIdIfItIsToEdit = null;
+
   bool desireDone = false;
+  bool wasInModal = false;
 
   final TextEditingController numberController = TextEditingController();
   final TextEditingController titleController = TextEditingController();
@@ -33,6 +39,22 @@ class _FormDesire extends State<FormDesire>{
   DateTime targetDateObject = DateTime.now();
   String targetDateText = DateFormat("dd/MM/yyyy").format(DateTime.now());
   String colorString = "";
+
+  void defineDefaultValuesWhenItIsToEdit(){
+    desireIdIfItIsToEdit = desireIfItIsToEdit!.id;
+    colorForDesire = convertStringToColor(desireIfItIsToEdit!.desireColor);
+    currentColor = convertStringToColor(desireIfItIsToEdit!.desireColor);
+    desireDone = desireIfItIsToEdit!.accomplishedDesire;
+
+    targetDateObject = desireIfItIsToEdit!.targetDate;
+    targetDateText = DateFormat("dd/MM/yyyy").format(desireIfItIsToEdit!.targetDate);
+    colorString = desireIfItIsToEdit!.desireColor;
+
+    targetDateController.text =  targetDateText;
+    descriptionController.text = desireIfItIsToEdit!.description;
+    titleController.text = desireIfItIsToEdit!.title;
+    numberController.text = "${desireIfItIsToEdit!.desireNumber}";
+  }
 
   Color convertStringToColor(String stringColor){
     return ColorConverter.convertStringToColor(stringColor);
@@ -54,19 +76,27 @@ class _FormDesire extends State<FormDesire>{
       builder: (context) {
         return AlertDialog(
           title: const Text('Escolha uma cor'),
-          content: SingleChildScrollView(
-            child: ColorPicker(
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState){
+              return  SingleChildScrollView(
+              child: ColorPicker(
               pickerColor: colorForDesire,
-              onColorChanged: changeColor,
-            ),
+        onColorChanged: changeColor,
+        ));
 
-          ),
+
+            }),
           actions: <Widget>[
             ElevatedButton(
               child: const Text('Salvar'),
               onPressed: () {
-                setState(() => currentColor = colorForDesire);
+                setState(()  {
+                    currentColor = colorForDesire;
+                    wasInModal = true;
+                });
+
                 Navigator.of(context).pop();
+
               },
             ),
           ],
@@ -82,36 +112,17 @@ class _FormDesire extends State<FormDesire>{
 
     targetDateController.text = targetDateText;
 
-    final MaterialStateProperty<Color?> doneColor =
-    MaterialStateProperty.resolveWith<Color?>(
-          (Set<MaterialState> states) {
-        if (states.contains(MaterialState.selected)) {
-          return Colors.amber;
-        }
-        return null;
-      },
-    );
+    if(args != null && args.desire != null && !wasInModal){
+      itIsToEdit = args!.isToEdit;
+      desireIfItIsToEdit = args!.desire;
 
-    final MaterialStateProperty<Color?> undoneColor =
-    MaterialStateProperty.resolveWith<Color?>(
-          (Set<MaterialState> states) {
-
-        if (states.contains(MaterialState.selected)) {
-          return Colors.amber.withOpacity(0.54);
-        }
-
-        if (states.contains(MaterialState.disabled)) {
-          return Colors.grey.shade400;
-        }
-
-        return null;
-      },
-    );
+      defineDefaultValuesWhenItIsToEdit();
+    }
 
     return Scaffold(
         appBar: AppBar(
           title: Text(
-              !args.isToEdit ?
+              !args.isToEdit && !Provider.of<AppNavigationProvider>(context,listen:false).isEditing ?
               "Registre um desejo" :
               "Edite o desejo"
           )
@@ -120,7 +131,6 @@ class _FormDesire extends State<FormDesire>{
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Form(
-
                 key: _formKey,
                 child: Column(
                   children: [
@@ -217,6 +227,7 @@ class _FormDesire extends State<FormDesire>{
                               targetDateText = DateFormat("dd/MM/yyyy").format(pickedDate);
                               targetDateController.text = targetDateText;
                               targetDateObject = pickedDate;
+                              wasInModal = true;
                             });
 
                           }
@@ -298,19 +309,22 @@ class _FormDesire extends State<FormDesire>{
                         onPressed: (){
                           if(_formKey.currentState!.validate()){
                             Desire desire = Desire(
+                                id: desireIdIfItIsToEdit,
                                 title: titleController.text,
                                 description: descriptionController.text,
                                 desireNumber: int.parse(numberController.text),
                                 desireColor: !colorString.isEmpty ? colorString : convertColorToString(colorForDesire),
                                 accomplishedDesire: desireDone,
                                 targetDate: targetDateObject,
-                                accomplishedDesireDateItDesireWasAccomplished: DateTime.now()
+                                accomplishedDesireDateIfDesireWasAccomplished: DateTime.now()
                             );
 
                             DesireDAO().save(desire);
 
-                            Provider.of<AppNavigationProvider>(context, listen: false).changeScreen(0);
-                            Navigator.of(context).pushReplacementNamed("/home");
+                            if(!Provider.of<AppNavigationProvider>(context,listen:false).isEditing){
+                              Provider.of<AppNavigationProvider>(context, listen: false).changeScreen(0);
+                              Navigator.of(context).pushReplacementNamed("/home");
+                            }
                           }
 
                         },

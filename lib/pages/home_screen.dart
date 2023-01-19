@@ -37,7 +37,7 @@ class _HomeScreen extends State<HomeScreen>{
                     icon: Icon(Icons.done),
                   ),
                   Tab(
-                    text:"Não realizados",
+                    text:"Pendentes",
                     icon: Icon(Icons.incomplete_circle),
                   ),
 

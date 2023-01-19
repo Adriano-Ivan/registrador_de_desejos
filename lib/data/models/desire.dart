@@ -9,11 +9,11 @@ class Desire {
   String desireColor;
   bool accomplishedDesire;
   DateTime targetDate;
-  DateTime accomplishedDesireDateItDesireWasAccomplished;
+  DateTime accomplishedDesireDateIfDesireWasAccomplished;
 
   Desire({this.id,required this.title, required this.description, required this.desireNumber,
            required this.desireColor, required this.accomplishedDesire, required this.targetDate,
-            required this.accomplishedDesireDateItDesireWasAccomplished});
+            required this.accomplishedDesireDateIfDesireWasAccomplished});
 
   String returnTargetDateString(){
     return "${this.targetDate.day}/${this.targetDate.month}/${this.targetDate.year}";

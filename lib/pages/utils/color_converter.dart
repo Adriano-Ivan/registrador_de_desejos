@@ -18,4 +18,12 @@ class ColorConverter{
   static String convertColorToString(Color color){
     return "#${color.value.toRadixString(16).substring(2,8)}";
   }
+
+  static MaterialStateProperty<Color?>? convertColorToMaterialStatePropertyColor(Color color){
+    return MaterialStateProperty.resolveWith<Color?>(
+          (Set<MaterialState> states) {
+        return color;
+      },
+    );
+  }
 }

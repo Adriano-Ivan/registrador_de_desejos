@@ -15,6 +15,11 @@ class AllDesires extends StatefulWidget{
 class _AllDesires extends State<AllDesires>{
   bool showDesires = false;
 
+  void reconfigureList(){
+    setState(() {
+
+    });
+  }
   @override
   Widget build(BuildContext context){
 
@@ -60,6 +65,7 @@ class _AllDesires extends State<AllDesires>{
                         final Desire desire = items[index];
 
                         return DesireItem(
+                          reconfigureList: reconfigureList,
                           desire: desire
                         );
                       });
