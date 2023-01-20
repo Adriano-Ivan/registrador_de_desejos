@@ -29,7 +29,7 @@ class _FormDesire extends State<FormDesire>{
   int? desireIdIfItIsToEdit = null;
 
   bool desireDone = false;
-  bool wasInModal = false;
+  bool wasInModalOrAccomplishedWasEdited = false;
 
   final TextEditingController numberController = TextEditingController();
   final TextEditingController titleController = TextEditingController();
@@ -92,7 +92,7 @@ class _FormDesire extends State<FormDesire>{
               onPressed: () {
                 setState(()  {
                     currentColor = colorForDesire;
-                    wasInModal = true;
+                    wasInModalOrAccomplishedWasEdited = true;
                 });
 
                 Navigator.of(context).pop();
@@ -112,10 +112,9 @@ class _FormDesire extends State<FormDesire>{
 
     targetDateController.text = targetDateText;
 
-    if(args != null && args.desire != null && !wasInModal){
+    if(args != null && args.desire != null && !wasInModalOrAccomplishedWasEdited){
       itIsToEdit = args!.isToEdit;
       desireIfItIsToEdit = args!.desire;
-
       defineDefaultValuesWhenItIsToEdit();
     }
 
@@ -227,7 +226,7 @@ class _FormDesire extends State<FormDesire>{
                               targetDateText = DateFormat("dd/MM/yyyy").format(pickedDate);
                               targetDateController.text = targetDateText;
                               targetDateObject = pickedDate;
-                              wasInModal = true;
+                              wasInModalOrAccomplishedWasEdited = true;
                             });
 
                           }
@@ -296,6 +295,7 @@ class _FormDesire extends State<FormDesire>{
 
                                     setState(() {
                                       desireDone = value;
+                                      wasInModalOrAccomplishedWasEdited = true;
                                     });
 
                                 },

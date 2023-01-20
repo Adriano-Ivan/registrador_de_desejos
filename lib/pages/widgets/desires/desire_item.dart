@@ -167,8 +167,17 @@ class _DesireItem extends State<DesireItem>{
                 ElevatedButton(
                     onPressed: (){
                       Navigator.of(context).pop();
+
+                      if(desireToOperate!.accomplishedDesire != desireDone){
+                        desireToOperate!.accomplishedDesire = desireDone;
+                        DesireDAO().save(desireToOperate!);
+
+                        setState(() {
+
+                        });
+                      }
                     },
-                    child: Text("Sair")
+                    child: Text("Fechar")
                 )
               ],
             );
