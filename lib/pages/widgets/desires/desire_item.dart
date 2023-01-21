@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import "package:provider/provider.dart";
 import 'package:registrador_de_desejos/data/models/desire.dart';
-import 'package:registrador_de_desejos/data/services/desire_dao.dart';
+import 'package:registrador_de_desejos/data/dao/desire_dao.dart';
 import 'package:registrador_de_desejos/pages/utils/color_converter.dart';
 import 'package:registrador_de_desejos/pages/utils/colors_for_accomplishment.dart';
 import 'package:registrador_de_desejos/pages/utils/form_desire_routed_arguments.dart';

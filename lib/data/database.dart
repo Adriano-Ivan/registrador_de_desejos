@@ -1,4 +1,4 @@
-import 'package:registrador_de_desejos/data/services/desire_dao.dart';
+import 'package:registrador_de_desejos/data/dao/desire_dao.dart';
 import "package:sqflite/sqflite.dart";
 import "package:path/path.dart";
 

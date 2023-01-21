@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:registrador_de_desejos/data/models/desire.dart';
-import 'package:registrador_de_desejos/data/services/desire_dao.dart';
+import 'package:registrador_de_desejos/data/dao/desire_dao.dart';
 import 'package:registrador_de_desejos/pages/widgets/desires/desire_item.dart';
 import 'package:registrador_de_desejos/pages/widgets/desires/desires_screen_type.dart';
 

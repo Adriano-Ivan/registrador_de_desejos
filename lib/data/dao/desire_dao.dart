@@ -89,55 +89,66 @@ class DesireDAO {
   Future<StatisticPercentageStatusComparison> returnStatisticPercentageStatusComparison() async{
     final Database database = await getDatabase();
 
-    await returnNumberOfAccomplishedBeforeTargetDate(database);
-    await returnNumberOfPending(database);
-    await returnNumberOfNotAccomplishedAndPending(database);
+    int allDesires = await countAllDesires(database);
+    int accomplishedBeforeTargetDate = await returnNumberOfAccomplishedBeforeTargetDate(database);
+    int numberOfPending = await returnNumberOfPending(database);
+    int numberOfPendingAndNotAccomplished = await returnNumberOfNotAccomplishedAndPending(database);
+    int accomplished = await returnNumberOfAccomplished(database);
 
+    print("$accomplishedBeforeTargetDate, $numberOfPending, $numberOfPendingAndNotAccomplished, $accomplished");
     return StatisticPercentageStatusComparison(
-        numberOfAccomplished:1,
-        numberOfAccomplishedInAdvance:1,
-        numberOfPending:1,
-        numberOfNotAccomplishedUntilTargetDate:1);
+        numberOfAccomplished: accomplished > 0 ? (accomplished / allDesires ) * 100 : accomplished.toDouble(),
+        numberOfAccomplishedInAdvance: accomplishedBeforeTargetDate > 0 ?
+                (accomplishedBeforeTargetDate / allDesires) * 100 : accomplishedBeforeTargetDate.toDouble(),
+        numberOfPending: numberOfPending > 0 ?
+              (numberOfPending / allDesires) * 100 : numberOfPending.toDouble(),
+        numberOfNotAccomplishedUntilTargetDate: numberOfPendingAndNotAccomplished > 0 ?
+                  (numberOfPendingAndNotAccomplished / allDesires) * 100 : numberOfPendingAndNotAccomplished.toDouble()
+    );
   }
 
-  Future<void> returnNumberOfPending(Database database) async {
-    List<Map<String, dynamic>>? tes = await database.rawQuery(
-        "SELECT * from $_tableName where $_accomplishedDesire = 0 AND "
+  Future<int> countAllDesires(Database database) async{
+    var objectWithCount = await database.rawQuery(
+        "SELECT count(*) number from $_tableName"
+    );
+
+    return int.parse("${objectWithCount[0]['number']}");
+  }
+
+  Future<int> returnNumberOfPending(Database database) async {
+    var objectWithCount = await database.rawQuery(
+        "SELECT count(*) number from $_tableName where $_accomplishedDesire = 0 AND "
             "date($_targetDate) >= date('${convertToDateString(DateTime.now())}')"
 
     );
-    tes.forEach((e){
-      print(e);
-    });
-    print(
-      tes.length
-    );
+
+    return int.parse("${objectWithCount[0]['number']}");
   }
 
-  Future<void> returnNumberOfNotAccomplishedAndPending(Database database) async{
-    print(
-      await database.rawQuery(
+  Future<int> returnNumberOfNotAccomplishedAndPending(Database database) async{
+    var objectWithCount = await database.rawQuery(
           "SELECT count(*) number from $_tableName where $_accomplishedDesire = 0 AND "
           "date($_targetDate) < date('${convertToDateString(DateTime.now())}') "
-      )
-    );
+      );
+
+    return int.parse("${objectWithCount[0]['number']}");
   }
 
-  Future<void> returnNumberOfAccomplishedBeforeTargetDate(Database database) async {
-    print(
-      await database.rawQuery(
+  Future<int> returnNumberOfAccomplishedBeforeTargetDate(Database database) async {
+    var  objectWithCount = await database.rawQuery(
         "SELECT count(*) number from $_tableName where $_accomplishedDesire = 1 AND "
             "date( $_targetDate) > date($_accomplishedDesireDateIfDesireWasAccomplished)"
-      )
-    );
+      );
+
+    return int.parse("${objectWithCount[0]['number']}");
   }
 
-  // revisar
-  Future<void> returnNumberOfAccomplished(Database database) async{
-    print(await database.rawQuery("SELECT count(*) from $_tableName where $_accomplishedDesire = 1 AND "
-        "date('%Y-%m-%d', $_targetDate) = date('%Y-%m-%d', $_accomplishedDesireDateIfDesireWasAccomplished) OR "
-        "date('%Y-%m-%d', $_targetDate) < date('%Y-%m-%d', $_accomplishedDesireDateIfDesireWasAccomplished)",
-    ));
+  Future<int> returnNumberOfAccomplished(Database database) async{
+    var objectWithCount = await database.rawQuery("SELECT count(*) number from $_tableName where $_accomplishedDesire = 1 AND "
+        "date($_targetDate) <= date($_accomplishedDesireDateIfDesireWasAccomplished)"
+    );
+
+    return int.parse("${objectWithCount[0]['number']}");
 
   }
 
