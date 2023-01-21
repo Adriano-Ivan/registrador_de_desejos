@@ -1,6 +1,4 @@
 
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:registrador_de_desejos/data/models/desire.dart';
 import 'package:registrador_de_desejos/data/services/desire_dao.dart';
@@ -75,7 +73,9 @@ class _DesiresBuilder extends State<DesiresBuilder>{
 
                         return DesireItem(
                             reconfigureList: widget.reconfigureList,
-                            desire: desire
+                            desire: desire,
+                            isToResetListBecauseItemDoesNotFitInList: widget.screenType == DesiresScreenType.allNotAccomplishedDesires
+                            || widget.screenType == DesiresScreenType.allAccomplishedDesires,
                         );
                       });
                 }

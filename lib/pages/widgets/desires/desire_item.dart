@@ -12,8 +12,9 @@ import 'package:registrador_de_desejos/providers/app_navigation_provider.dart';
 class DesireItem extends StatefulWidget{
   final Desire desire;
   final Function reconfigureList;
+  final isToResetListBecauseItemDoesNotFitInList;
 
-  DesireItem({required this.desire,required this.reconfigureList});
+  DesireItem({required this.desire,required this.reconfigureList,required this.isToResetListBecauseItemDoesNotFitInList});
 
   @override
   _DesireItem createState() => _DesireItem();
@@ -172,9 +173,14 @@ class _DesireItem extends State<DesireItem>{
                         desireToOperate!.accomplishedDesire = desireDone;
                         DesireDAO().save(desireToOperate!);
 
-                        setState(() {
+                        if(widget.isToResetListBecauseItemDoesNotFitInList){
+                          widget.reconfigureList();
+                        } else {
+                          setState(() {
 
-                        });
+                          });
+                        }
+
                       }
                     },
                     child: Text("Fechar")

@@ -1,6 +1,6 @@
 
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:registrador_de_desejos/pages/widgets/desires/desires_builder.dart';
 import 'package:registrador_de_desejos/pages/widgets/desires/desires_screen_type.dart';
 
