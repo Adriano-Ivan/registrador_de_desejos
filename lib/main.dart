@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:registrador_de_desejos/pages/desires_statistics.dart';
 import 'package:registrador_de_desejos/pages/form_desire.dart';
 import 'package:registrador_de_desejos/pages/home_screen.dart';
 import "package:provider/provider.dart";
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
       routes: {
         "/home": (context) => HomeScreen(),
         "/form_desire": (context) => FormDesire(),
+        "/statistics": (context) => DesiresStatistics()
       }
     );
   }

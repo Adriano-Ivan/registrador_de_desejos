@@ -5,13 +5,13 @@ import 'package:registrador_de_desejos/pages/utils/form_desire_routed_arguments.
 import 'package:registrador_de_desejos/providers/app_navigation_provider.dart';
 import "package:provider/provider.dart";
 
-class AppBottomNavigationBar extends StatefulWidget {
+class AppDesiresBottomNavigationBar extends StatefulWidget {
 
   @override
-  _AppBottomNavigationBar createState() => _AppBottomNavigationBar();
+  _AppDesiresBottomNavigationBar createState() => _AppDesiresBottomNavigationBar();
 }
 
-class _AppBottomNavigationBar extends State<AppBottomNavigationBar>{
+class _AppDesiresBottomNavigationBar extends State<AppDesiresBottomNavigationBar>{
   int _selectedIndex = 0;
 
   @override
@@ -30,6 +30,11 @@ class _AppBottomNavigationBar extends State<AppBottomNavigationBar>{
           label: "Salvar desejo",
           backgroundColor: Colors.green,
         ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.auto_graph),
+          label:"Estatísticas",
+          backgroundColor: Colors.cyan
+        )
       ],
       currentIndex: _selectedIndex,
       selectedItemColor: Colors.amber[800],
@@ -53,6 +58,12 @@ class _AppBottomNavigationBar extends State<AppBottomNavigationBar>{
             }
 
             break;
+          case 2:
+
+            if(index != _selectedIndex){
+                Navigator.of(context).pushReplacementNamed("/statistics");
+            }
+
         }
         Provider.of<AppNavigationProvider>(context, listen: false).changeScreen(index);
       },

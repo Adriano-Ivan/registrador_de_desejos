@@ -1,11 +1,12 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:registrador_de_desejos/pages/widgets/app_bottom_navigation_bar.dart';
+import 'package:registrador_de_desejos/pages/widgets/app_desires_bottom_navigation_bar.dart';
 import 'package:registrador_de_desejos/pages/widgets/app_drawer.dart';
 import 'package:registrador_de_desejos/pages/widgets/desires/all_accomplished_desires.dart';
 import 'package:registrador_de_desejos/pages/widgets/desires/all_desires.dart';
 import 'package:registrador_de_desejos/pages/widgets/desires/all_not_accomplished_desires.dart';
+import 'package:registrador_de_desejos/pages/widgets/desires/all_today_desires.dart';
 
 class HomeScreen extends StatefulWidget{
 
@@ -49,13 +50,13 @@ class _HomeScreen extends State<HomeScreen>{
           body:TabBarView(
             children: [
               AllDesires(),
-              Text("TESTE 1"),
+              AllTodayDesires(),
               AllAccomplishedDesires(),
               AllNotAccomplishedDesires(),
             ],
           ),
 
-        bottomNavigationBar: AppBottomNavigationBar(),
+        bottomNavigationBar: AppDesiresBottomNavigationBar(),
       )
 
     );

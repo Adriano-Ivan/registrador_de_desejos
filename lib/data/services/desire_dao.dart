@@ -75,6 +75,16 @@ class DesireDAO {
     return toList(result);
   }
 
+  Future<List<Desire>> findAllTodayDesires() async {
+    final Database database = await getDatabase();
+    DateTime now = DateTime.now();
+    final List<Map<String,dynamic>> result = await database.query(_tableName,
+      where: "$_targetDate = ?", whereArgs: ["${convertToDateString(now)}"]
+    );
+
+    return toList(result);
+  }
+
   delete(int id) async {
     final Database database = await getDatabase();
     return await database.delete(

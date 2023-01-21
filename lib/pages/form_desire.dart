@@ -8,7 +8,7 @@ import 'package:registrador_de_desejos/data/services/desire_dao.dart';
 import 'package:registrador_de_desejos/pages/utils/color_converter.dart';
 import 'package:registrador_de_desejos/pages/utils/colors_for_accomplishment.dart';
 import 'package:registrador_de_desejos/pages/utils/form_desire_routed_arguments.dart';
-import 'package:registrador_de_desejos/pages/widgets/app_bottom_navigation_bar.dart';
+import 'package:registrador_de_desejos/pages/widgets/app_desires_bottom_navigation_bar.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:registrador_de_desejos/providers/app_navigation_provider.dart';
 
@@ -336,7 +336,7 @@ class _FormDesire extends State<FormDesire>{
           ),
         ),
 
-      bottomNavigationBar: AppBottomNavigationBar(),
+      bottomNavigationBar: AppDesiresBottomNavigationBar(),
     );
   }
 }

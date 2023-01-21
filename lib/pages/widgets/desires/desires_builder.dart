@@ -23,6 +23,8 @@ class _DesiresBuilder extends State<DesiresBuilder>{
       return DesireDAO().findAllAccomplishedOrNotAccomplished(1);
     } else if(widget.screenType == DesiresScreenType.allNotAccomplishedDesires){
       return DesireDAO().findAllAccomplishedOrNotAccomplished(0);
+    } else if(widget.screenType == DesiresScreenType.todayDesires){
+      return DesireDAO().findAllTodayDesires();
     }
 
     return DesireDAO().findAll();

@@ -2,6 +2,7 @@
 
  enum DesiresScreenType{
   allDesires,
-   allAccomplishedDesires,
-   allNotAccomplishedDesires
+  allAccomplishedDesires,
+  allNotAccomplishedDesires,
+  todayDesires
  }
