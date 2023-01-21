@@ -3,7 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:registrador_de_desejos/pages/widgets/app_bottom_navigation_bar.dart';
 import 'package:registrador_de_desejos/pages/widgets/app_drawer.dart';
+import 'package:registrador_de_desejos/pages/widgets/desires/all_accomplished_desires.dart';
 import 'package:registrador_de_desejos/pages/widgets/desires/all_desires.dart';
+import 'package:registrador_de_desejos/pages/widgets/desires/all_not_accomplished_desires.dart';
 
 class HomeScreen extends StatefulWidget{
 
@@ -48,8 +50,8 @@ class _HomeScreen extends State<HomeScreen>{
             children: [
               AllDesires(),
               Text("TESTE 1"),
-              Text("TESTE 2"),
-              Text("TESTE33 33"),
+              AllAccomplishedDesires(),
+              AllNotAccomplishedDesires(),
             ],
           ),
 

@@ -67,6 +67,14 @@ class DesireDAO {
     return toList(result);
   }
 
+  Future<List<Desire>> findAllAccomplishedOrNotAccomplished(int accomplished) async {
+    final Database database = await getDatabase();
+    final List<Map<String, dynamic>> result = await database.query(_tableName,
+        where: "$_accomplishedDesire = ?", whereArgs: [accomplished]);
+
+    return toList(result);
+  }
+
   delete(int id) async {
     final Database database = await getDatabase();
     return await database.delete(

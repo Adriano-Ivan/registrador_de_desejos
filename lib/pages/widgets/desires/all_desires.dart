@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:registrador_de_desejos/data/models/desire.dart';
 import 'package:registrador_de_desejos/data/services/desire_dao.dart';
 import 'package:registrador_de_desejos/pages/widgets/desires/desire_item.dart';
+import 'package:registrador_de_desejos/pages/widgets/desires/desires_builder.dart';
+import 'package:registrador_de_desejos/pages/widgets/desires/desires_screen_type.dart';
 
 class AllDesires extends StatefulWidget{
 
@@ -13,84 +15,19 @@ class AllDesires extends StatefulWidget{
 }
 
 class _AllDesires extends State<AllDesires>{
-  bool showDesires = false;
 
   void reconfigureList(){
     setState(() {
 
     });
   }
+
   @override
   Widget build(BuildContext context){
 
-    return FutureBuilder(
-        future: DesireDAO().findAll(),
-        builder: (context, snapshot){
-          List<Desire>? items = snapshot.data;
-          switch(snapshot.connectionState){
-            case ConnectionState.none:
-              return Center(
-                child: Column(
-                  children: const [
-                    CircularProgressIndicator(),
-                    Text('Carregando'),
-                  ],
-                ),
-              );
-            case ConnectionState.waiting:
-              return Center(
-                child: Column(
-                  children: const [
-                    CircularProgressIndicator(),
-                    Text('Carregando'),
-                  ],
-                ),
-              );
-            case ConnectionState.active:
-              return Center(
-                child: Column(
-                  children: const [
-                    CircularProgressIndicator(),
-                    Text('Carregando'),
-                  ],
-                ),
-              );
-            case ConnectionState.done:
-              if (snapshot.hasData && items != null) {
-                if (items.isNotEmpty) {
-                  return ListView.builder(
-                      itemCount: items.length,
-                      itemBuilder: (BuildContext context, int index) {
-
-                        final Desire desire = items[index];
-
-                        return DesireItem(
-                          reconfigureList: reconfigureList,
-                          desire: desire
-                        );
-                      });
-                }
-                return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-
-                      crossAxisAlignment: CrossAxisAlignment.center,
-
-                      children: const [
-                        Icon(
-                          Icons.error_outline,
-                          size: 128,
-                        ),
-                        Text(
-                          "Não há nenhum desejo",
-                          style: TextStyle(fontSize: 32),
-                        ),
-                      ],
-                    ));
-              }
-          }
-          return const Text('Erro desconhecido');
-        }
+    return DesiresBuilder(
+        screenType: DesiresScreenType.allDesires,
+        reconfigureList: reconfigureList
     );
   }
 }
