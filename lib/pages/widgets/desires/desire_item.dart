@@ -170,7 +170,9 @@ class _DesireItem extends State<DesireItem>{
                       Navigator.of(context).pop();
 
                       if(desireToOperate!.accomplishedDesire != desireDone){
+                        desireToOperate!.accomplishedDesireDateIfDesireWasAccomplished = DateTime.now();
                         desireToOperate!.accomplishedDesire = desireDone;
+
                         DesireDAO().save(desireToOperate!);
 
                         if(widget.isToResetListBecauseItemDoesNotFitInList){

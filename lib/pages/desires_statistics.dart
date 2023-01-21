@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import "package:fl_chart/fl_chart.dart";
+import 'package:registrador_de_desejos/data/services/desire_dao.dart';
 import 'package:registrador_de_desejos/pages/widgets/app_desires_bottom_navigation_bar.dart';
 
 class DesiresStatistics extends StatefulWidget{
@@ -11,6 +12,7 @@ class DesiresStatistics extends StatefulWidget{
 
 class _DesiresStatistics extends State<DesiresStatistics>{
 
+  bool wasLoaded = false;
   double convertToIntSize(double size){
     return (size / 2 );
   }
@@ -19,11 +21,20 @@ class _DesiresStatistics extends State<DesiresStatistics>{
   Widget build(BuildContext context){
     Size size = MediaQuery.of(context).size;
 
+    DesireDAO().returnStatisticPercentageStatusComparison().then((t){
+        if(!wasLoaded){
+          setState((){
+            wasLoaded = true;
+          });
+        }
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Estatísticas de desejos")
       ),
       body:
+          wasLoaded ?
          Center(
             child: Card(
               child: Column(
@@ -59,10 +70,12 @@ class _DesiresStatistics extends State<DesiresStatistics>{
 
                         ),
                   ),
-                 
+
                 ],
               ),
             ),
+          ) : Center(
+            child: CircularProgressIndicator(),
           ),
 
       bottomNavigationBar: AppDesiresBottomNavigationBar(),

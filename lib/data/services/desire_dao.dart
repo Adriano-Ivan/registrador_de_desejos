@@ -2,6 +2,7 @@
 
 import 'package:registrador_de_desejos/data/database.dart';
 import 'package:registrador_de_desejos/data/models/desire.dart';
+import 'package:registrador_de_desejos/data/models/statistic_percentage_status_comparison.dart';
 import "package:sqflite/sqflite.dart";
 
 class DesireDAO {
@@ -12,7 +13,7 @@ class DesireDAO {
       "$_desireNumber INTEGER, "
       "$_desireColor VARCHAR(10), "
       "$_targetDate VARCHAR(30), "
-      "$_accomplishedDesireDateItDesireWasAccomplished VARCHAR(30), "
+      "$_accomplishedDesireDateIfDesireWasAccomplished VARCHAR(30), "
       "$_accomplishedDesire INTEGER)";
 
   static const String _tableName = "desires_table";
@@ -24,7 +25,7 @@ class DesireDAO {
   static const String _desireColor = "desire_color";
   static const String _accomplishedDesire = "accomplished_desire";
   static const String _targetDate = "target_date";
-  static const String _accomplishedDesireDateItDesireWasAccomplished = "accomplished_desire_date_if_desire_was_accomplished";
+  static const String _accomplishedDesireDateIfDesireWasAccomplished = "accomplished_desire_date_if_desire_was_accomplished";
 
   save(Desire desire) async {
     final Database database = await getDatabase();
@@ -85,6 +86,61 @@ class DesireDAO {
     return toList(result);
   }
 
+  Future<StatisticPercentageStatusComparison> returnStatisticPercentageStatusComparison() async{
+    final Database database = await getDatabase();
+
+    await returnNumberOfAccomplishedBeforeTargetDate(database);
+    await returnNumberOfPending(database);
+    await returnNumberOfNotAccomplishedAndPending(database);
+
+    return StatisticPercentageStatusComparison(
+        numberOfAccomplished:1,
+        numberOfAccomplishedInAdvance:1,
+        numberOfPending:1,
+        numberOfNotAccomplishedUntilTargetDate:1);
+  }
+
+  Future<void> returnNumberOfPending(Database database) async {
+    List<Map<String, dynamic>>? tes = await database.rawQuery(
+        "SELECT * from $_tableName where $_accomplishedDesire = 0 AND "
+            "date($_targetDate) >= date('${convertToDateString(DateTime.now())}')"
+
+    );
+    tes.forEach((e){
+      print(e);
+    });
+    print(
+      tes.length
+    );
+  }
+
+  Future<void> returnNumberOfNotAccomplishedAndPending(Database database) async{
+    print(
+      await database.rawQuery(
+          "SELECT count(*) number from $_tableName where $_accomplishedDesire = 0 AND "
+          "date($_targetDate) < date('${convertToDateString(DateTime.now())}') "
+      )
+    );
+  }
+
+  Future<void> returnNumberOfAccomplishedBeforeTargetDate(Database database) async {
+    print(
+      await database.rawQuery(
+        "SELECT count(*) number from $_tableName where $_accomplishedDesire = 1 AND "
+            "date( $_targetDate) > date($_accomplishedDesireDateIfDesireWasAccomplished)"
+      )
+    );
+  }
+
+  // revisar
+  Future<void> returnNumberOfAccomplished(Database database) async{
+    print(await database.rawQuery("SELECT count(*) from $_tableName where $_accomplishedDesire = 1 AND "
+        "date('%Y-%m-%d', $_targetDate) = date('%Y-%m-%d', $_accomplishedDesireDateIfDesireWasAccomplished) OR "
+        "date('%Y-%m-%d', $_targetDate) < date('%Y-%m-%d', $_accomplishedDesireDateIfDesireWasAccomplished)",
+    ));
+
+  }
+
   delete(int id) async {
     final Database database = await getDatabase();
     return await database.delete(
@@ -114,7 +170,7 @@ class DesireDAO {
       desireNumber: mapDesire[_desireNumber],
       accomplishedDesire: mapDesire[_accomplishedDesire] == 1? true : false,
       targetDate: convertToDate(mapDesire[_targetDate]),
-      accomplishedDesireDateIfDesireWasAccomplished: convertToDate(mapDesire[_accomplishedDesireDateItDesireWasAccomplished])
+      accomplishedDesireDateIfDesireWasAccomplished: convertToDate(mapDesire[_accomplishedDesireDateIfDesireWasAccomplished])
     );
   }
 
@@ -136,7 +192,7 @@ class DesireDAO {
     mapDesire[_accomplishedDesire] = desire.accomplishedDesire ? 1 : 0;
     mapDesire[_description] = desire.description;
     mapDesire[_targetDate] = convertToDateString(desire.targetDate);
-    mapDesire[_accomplishedDesireDateItDesireWasAccomplished] = convertToDateString(desire.accomplishedDesireDateIfDesireWasAccomplished);
+    mapDesire[_accomplishedDesireDateIfDesireWasAccomplished] = convertToDateString(desire.accomplishedDesireDateIfDesireWasAccomplished);
 
     return mapDesire;
   }
