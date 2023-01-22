@@ -97,13 +97,17 @@ class DesireDAO {
 
     print("$accomplishedBeforeTargetDate, $numberOfPending, $numberOfPendingAndNotAccomplished, $accomplished");
     return StatisticPercentageStatusComparison(
-        numberOfAccomplished: accomplished > 0 ? (accomplished / allDesires ) * 100 : accomplished.toDouble(),
-        numberOfAccomplishedInAdvance: accomplishedBeforeTargetDate > 0 ?
+        numberOfAccomplishedPercentage: accomplished > 0 ? (accomplished / allDesires ) * 100 : accomplished.toDouble(),
+        numberOfAccomplishedInAdvancePercentage: accomplishedBeforeTargetDate > 0 ?
                 (accomplishedBeforeTargetDate / allDesires) * 100 : accomplishedBeforeTargetDate.toDouble(),
-        numberOfPending: numberOfPending > 0 ?
+        numberOfPendingPercentage: numberOfPending > 0 ?
               (numberOfPending / allDesires) * 100 : numberOfPending.toDouble(),
-        numberOfNotAccomplishedUntilTargetDate: numberOfPendingAndNotAccomplished > 0 ?
-                  (numberOfPendingAndNotAccomplished / allDesires) * 100 : numberOfPendingAndNotAccomplished.toDouble()
+        numberOfNotAccomplishedUntilTargetDatePercentage: numberOfPendingAndNotAccomplished > 0 ?
+                  (numberOfPendingAndNotAccomplished / allDesires) * 100 : numberOfPendingAndNotAccomplished.toDouble(),
+        numberOfAccomplishedQuantity: accomplished,
+        numberOfAccomplishedInAdvanceQuantity: accomplishedBeforeTargetDate,
+        numberOfNotAccomplishedUntilTargetDateQuantity: numberOfPendingAndNotAccomplished,
+        numberOfPendingQuantity: numberOfPending
     );
   }
 

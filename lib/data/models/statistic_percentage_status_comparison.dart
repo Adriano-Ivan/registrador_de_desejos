@@ -1,12 +1,19 @@
 
 class StatisticPercentageStatusComparison {
-  double numberOfAccomplished;
-  double numberOfAccomplishedInAdvance;
-  double numberOfPending;
-  double numberOfNotAccomplishedUntilTargetDate;
+  double numberOfAccomplishedPercentage;
+  double numberOfAccomplishedInAdvancePercentage;
+  double numberOfPendingPercentage;
+  double numberOfNotAccomplishedUntilTargetDatePercentage;
 
-  StatisticPercentageStatusComparison({required this.numberOfAccomplished,
-        required this.numberOfAccomplishedInAdvance, required this.numberOfPending,
-        required this.numberOfNotAccomplishedUntilTargetDate
+  int numberOfAccomplishedQuantity;
+  int numberOfAccomplishedInAdvanceQuantity;
+  int numberOfNotAccomplishedUntilTargetDateQuantity;
+  int numberOfPendingQuantity;
+
+  StatisticPercentageStatusComparison({required this.numberOfAccomplishedPercentage,
+        required this.numberOfAccomplishedInAdvancePercentage, required this.numberOfPendingPercentage,
+        required this.numberOfNotAccomplishedUntilTargetDatePercentage,
+        required this.numberOfAccomplishedQuantity, required this.numberOfAccomplishedInAdvanceQuantity,
+        required this.numberOfNotAccomplishedUntilTargetDateQuantity, required this.numberOfPendingQuantity
   });
 }
