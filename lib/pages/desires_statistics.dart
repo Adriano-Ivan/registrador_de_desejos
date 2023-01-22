@@ -14,17 +14,9 @@ class _DesiresStatistics extends State<DesiresStatistics> {
       null;
   bool wasLoaded = false;
 
-  double convertToIntSize(double size) {
-    return (size / 2);
-  }
-
-  double formatPercentage(double percentage) {
-    return double.parse(percentage.toStringAsFixed(2));
-  }
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
 
     DesireDAO()
         .returnStatisticPercentageStatusComparison()
@@ -38,97 +30,153 @@ class _DesiresStatistics extends State<DesiresStatistics> {
       }
     });
 
-    return Scaffold(
-      appBar: AppBar(title: Text("Estatísticas de desejos")),
-      body: wasLoaded
-          ? Center(
-              child: Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Expanded(
-                      child: PieChart(
-                        PieChartData(centerSpaceRadius: 0, sections: [
-                          PieChartSectionData(
-                              value: formatPercentage(
-                                  statisticPercentageStatusComparison!
-                                      .numberOfPendingPercentage),
-                              title:
-                                  "${formatPercentage(statisticPercentageStatusComparison!.numberOfPendingPercentage)}%",
-                              color: Color.fromRGBO(255, 255, 0, 1),
-                              radius: size.width / 3),
-                          PieChartSectionData(
-                              value: formatPercentage(
-                                  statisticPercentageStatusComparison!
-                                      .numberOfAccomplishedPercentage),
-                              title:
-                                  "${formatPercentage(statisticPercentageStatusComparison!.numberOfAccomplishedPercentage)}%",
-                              color: Color.fromRGBO(46, 184, 46, 1),
-                              radius: size.width / 3),
-                          PieChartSectionData(
-                              value: formatPercentage(
-                                  statisticPercentageStatusComparison!
-                                      .numberOfNotAccomplishedUntilTargetDatePercentage),
-                              title:
-                                  "${formatPercentage(statisticPercentageStatusComparison!.numberOfNotAccomplishedUntilTargetDatePercentage)}%",
-                              color: Color.fromRGBO(255, 0, 0, 1),
-                              radius: size.width / 3),
-                          PieChartSectionData(
-                              value: formatPercentage(
-                                  statisticPercentageStatusComparison!
-                                      .numberOfAccomplishedInAdvancePercentage),
-                              title:
-                                  "${formatPercentage(statisticPercentageStatusComparison!.numberOfAccomplishedInAdvancePercentage)}%",
-                              color: Color.fromRGBO(0, 102, 0, 1),
-                              radius: size.width / 3),
-                        ]),
-                        // Optional
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: size.width/ 8),
-                      padding: const EdgeInsets.all(18.0),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              IndicatorDesireStatusPercentage(
-                                  color: Color.fromRGBO(255, 255, 0, 1),
-                                  text: "Desejo pendente"),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              IndicatorDesireStatusPercentage(
-                                  color: Color.fromRGBO(46, 184, 46, 1),
-                                  text: "Desejo realizado"),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              IndicatorDesireStatusPercentage(
-                                  color: Color.fromRGBO(255, 0, 0, 1),
-                                  text: "Desejo pendente e não realizado"),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              IndicatorDesireStatusPercentage(
-                                  color: Color.fromRGBO(0, 102, 0, 1),
-                                  text: "Desejo realizado adiantadamente"),
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+            title: Text("Estatísticas de desejos"),
+          bottom: TabBar(
+            tabs: [
+              Tab(
+                text:"Porcentagem",
+                icon: Icon(Icons.pie_chart),
               ),
-            )
-          : Center(
-              child: CircularProgressIndicator(),
+              Tab(
+                text:"Números",
+                icon: Icon(Icons.bar_chart),
+              ),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            PieChartDesires(
+                wasLoaded: wasLoaded,
+                statisticPercentageStatusComparison: statisticPercentageStatusComparison),
+            Text("TESTE")
+          ],
+        ),
+        bottomNavigationBar: AppDesiresBottomNavigationBar(),
+      ),
+    );
+  }
+}
+
+class PieChartDesires extends StatefulWidget{
+  final bool wasLoaded;
+  final StatisticPercentageStatusComparison? statisticPercentageStatusComparison;
+
+  PieChartDesires({required this.wasLoaded, required this.statisticPercentageStatusComparison});
+
+  @override
+  _PieChartDesires createState() => _PieChartDesires();
+}
+
+class _PieChartDesires extends State<PieChartDesires>{
+
+  double convertToIntSize(double size) {
+    return (size / 2);
+  }
+
+  double formatPercentage(double percentage) {
+    return double.parse(percentage.toStringAsFixed(2));
+  }
+
+  @override
+  Widget build(BuildContext context){
+    Size size = MediaQuery.of(context).size;
+
+    return widget.wasLoaded
+        ? Center(
+      child: Container(
+        padding: EdgeInsets.only(top: 10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Expanded(
+              child: PieChart(
+                PieChartData(centerSpaceRadius: 0, sections: [
+                  PieChartSectionData(
+                      value: formatPercentage(
+                          widget.statisticPercentageStatusComparison!
+                              .numberOfPendingPercentage),
+                      title:
+                      "${formatPercentage(widget.statisticPercentageStatusComparison!.numberOfPendingPercentage)}%",
+                      color: Color.fromRGBO(255, 255, 0, 1),
+                      radius: size.width / 3),
+                  PieChartSectionData(
+                      value: formatPercentage(
+                          widget.statisticPercentageStatusComparison!
+                              .numberOfAccomplishedPercentage),
+                      title:
+                      "${formatPercentage(widget.statisticPercentageStatusComparison!.numberOfAccomplishedPercentage)}%",
+                      color: Color.fromRGBO(46, 184, 46, 1),
+                      radius: size.width / 3),
+                  PieChartSectionData(
+                      value: formatPercentage(
+                          widget.statisticPercentageStatusComparison!
+                              .numberOfNotAccomplishedUntilTargetDatePercentage),
+                      title:
+                      "${formatPercentage(widget.statisticPercentageStatusComparison!.numberOfNotAccomplishedUntilTargetDatePercentage)}%",
+                      color: Color.fromRGBO(255, 0, 0, 1),
+                      radius: size.width / 3),
+                  PieChartSectionData(
+                      value: formatPercentage(
+                          widget.statisticPercentageStatusComparison!
+                              .numberOfAccomplishedInAdvancePercentage),
+                      title:
+                      "${formatPercentage(widget.statisticPercentageStatusComparison!.numberOfAccomplishedInAdvancePercentage)}%",
+                      titleStyle: TextStyle(
+                        color: Colors.white,
+                      ),
+                      color: Color.fromRGBO(0, 102, 0, 1),
+                      radius: size.width / 3),
+                ]),
+                // Optional
+              ),
             ),
-      bottomNavigationBar: AppDesiresBottomNavigationBar(),
+            Container(
+              margin: EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.all(18.0),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      IndicatorDesireStatusPercentage(
+                          color: Color.fromRGBO(255, 255, 0, 1),
+                          text: "Desejo pendente"),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      IndicatorDesireStatusPercentage(
+                          color: Color.fromRGBO(46, 184, 46, 1),
+                          text: "Desejo realizado"),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      IndicatorDesireStatusPercentage(
+                          color: Color.fromRGBO(255, 0, 0, 1),
+                          text: "Desejo pendente e não realizado"),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      IndicatorDesireStatusPercentage(
+                          color: Color.fromRGBO(0, 102, 0, 1),
+                          text: "Desejo realizado adiantadamente"),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    )
+        : Center(
+      child: CircularProgressIndicator(),
     );
   }
 }
