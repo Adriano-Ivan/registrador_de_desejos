@@ -4,6 +4,11 @@ import 'package:registrador_de_desejos/data/dao/desire_dao.dart';
 import 'package:registrador_de_desejos/data/models/statistic_percentage_status_comparison.dart';
 import 'package:registrador_de_desejos/pages/widgets/app_desires_bottom_navigation_bar.dart';
 
+enum TypePieChartDesire{
+  PERCENTAGE,
+  NUMERIC
+}
+
 class DesiresStatistics extends StatefulWidget {
   @override
   _DesiresStatistics createState() => _DesiresStatistics();
@@ -50,10 +55,13 @@ class _DesiresStatistics extends State<DesiresStatistics> {
         ),
         body: TabBarView(
           children: [
-            PieChartDesires(
+            _PieChartDesiresPercentage(
                 wasLoaded: wasLoaded,
                 statisticPercentageStatusComparison: statisticPercentageStatusComparison),
-            Text("TESTE")
+
+            _PieChartDesiresNumeric(
+                wasLoaded: wasLoaded,
+                statisticPercentageStatusComparison: statisticPercentageStatusComparison),
           ],
         ),
         bottomNavigationBar: AppDesiresBottomNavigationBar(),
@@ -62,17 +70,65 @@ class _DesiresStatistics extends State<DesiresStatistics> {
   }
 }
 
-class PieChartDesires extends StatefulWidget{
+class _PieChartDesiresPercentage extends StatefulWidget{
+   final bool wasLoaded;
+   final StatisticPercentageStatusComparison? statisticPercentageStatusComparison;
+
+  _PieChartDesiresPercentage({required this.wasLoaded,required this.statisticPercentageStatusComparison });
+
+
+  _PieChartDesiresPercentageState createState( ) => _PieChartDesiresPercentageState();
+}
+
+class _PieChartDesiresPercentageState extends State<_PieChartDesiresPercentage>{
+
+  @override
+  Widget build(BuildContext context){
+    return _PieChartDesires(
+        wasLoaded: widget.wasLoaded,
+        typePieChartDesire: TypePieChartDesire.PERCENTAGE,
+        statisticPercentageStatusComparison: widget.statisticPercentageStatusComparison
+    );
+  }
+}
+
+class _PieChartDesiresNumeric extends StatefulWidget{
   final bool wasLoaded;
   final StatisticPercentageStatusComparison? statisticPercentageStatusComparison;
 
-  PieChartDesires({required this.wasLoaded, required this.statisticPercentageStatusComparison});
+  _PieChartDesiresNumeric({required this.wasLoaded,required this.statisticPercentageStatusComparison });
 
-  @override
-  _PieChartDesires createState() => _PieChartDesires();
+
+  _PieChartDesiresNumericState createState( ) => _PieChartDesiresNumericState();
 }
 
-class _PieChartDesires extends State<PieChartDesires>{
+class _PieChartDesiresNumericState extends State<_PieChartDesiresNumeric>{
+
+  @override
+  Widget build(BuildContext context){
+    return _PieChartDesires(
+        wasLoaded: widget.wasLoaded,
+        typePieChartDesire: TypePieChartDesire.NUMERIC,
+        statisticPercentageStatusComparison: widget.statisticPercentageStatusComparison
+    );
+  }
+}
+
+class _PieChartDesires extends StatefulWidget{
+  final bool wasLoaded;
+  final StatisticPercentageStatusComparison? statisticPercentageStatusComparison;
+  final TypePieChartDesire typePieChartDesire;
+
+  _PieChartDesires({
+    required this.wasLoaded, required this.statisticPercentageStatusComparison,
+    required this.typePieChartDesire
+  });
+
+  @override
+  _PieChartDesiresState createState() => _PieChartDesiresState();
+}
+
+class _PieChartDesiresState extends State<_PieChartDesires>{
 
   double convertToIntSize(double size) {
     return (size / 2);
@@ -101,7 +157,9 @@ class _PieChartDesires extends State<PieChartDesires>{
                           widget.statisticPercentageStatusComparison!
                               .numberOfPendingPercentage),
                       title:
-                      "${formatPercentage(widget.statisticPercentageStatusComparison!.numberOfPendingPercentage)}%",
+                      "${widget.typePieChartDesire == TypePieChartDesire.PERCENTAGE ?
+                      "${formatPercentage(widget.statisticPercentageStatusComparison!.numberOfPendingPercentage)}%" :
+                      widget.statisticPercentageStatusComparison!.numberOfPendingQuantity}",
                       color: Color.fromRGBO(255, 255, 0, 1),
                       radius: size.width / 3),
                   PieChartSectionData(
@@ -109,7 +167,9 @@ class _PieChartDesires extends State<PieChartDesires>{
                           widget.statisticPercentageStatusComparison!
                               .numberOfAccomplishedPercentage),
                       title:
-                      "${formatPercentage(widget.statisticPercentageStatusComparison!.numberOfAccomplishedPercentage)}%",
+                      "${widget.typePieChartDesire == TypePieChartDesire.PERCENTAGE ?
+                      "${formatPercentage(widget.statisticPercentageStatusComparison!.numberOfAccomplishedPercentage)}%" :
+                      widget.statisticPercentageStatusComparison!.numberOfAccomplishedQuantity}",
                       color: Color.fromRGBO(46, 184, 46, 1),
                       radius: size.width / 3),
                   PieChartSectionData(
@@ -117,7 +177,9 @@ class _PieChartDesires extends State<PieChartDesires>{
                           widget.statisticPercentageStatusComparison!
                               .numberOfNotAccomplishedUntilTargetDatePercentage),
                       title:
-                      "${formatPercentage(widget.statisticPercentageStatusComparison!.numberOfNotAccomplishedUntilTargetDatePercentage)}%",
+                      "${widget.typePieChartDesire == TypePieChartDesire.PERCENTAGE ?
+                      "${formatPercentage(widget.statisticPercentageStatusComparison!.numberOfNotAccomplishedUntilTargetDatePercentage)}%" :
+                      widget.statisticPercentageStatusComparison!.numberOfNotAccomplishedUntilTargetDateQuantity}",
                       color: Color.fromRGBO(255, 0, 0, 1),
                       radius: size.width / 3),
                   PieChartSectionData(
@@ -125,7 +187,9 @@ class _PieChartDesires extends State<PieChartDesires>{
                           widget.statisticPercentageStatusComparison!
                               .numberOfAccomplishedInAdvancePercentage),
                       title:
-                      "${formatPercentage(widget.statisticPercentageStatusComparison!.numberOfAccomplishedInAdvancePercentage)}%",
+                      "${widget.typePieChartDesire == TypePieChartDesire.PERCENTAGE ?
+                      "${formatPercentage(widget.statisticPercentageStatusComparison!.numberOfAccomplishedInAdvancePercentage)}%" :
+                      widget.statisticPercentageStatusComparison!.numberOfAccomplishedInAdvanceQuantity}",
                       titleStyle: TextStyle(
                         color: Colors.white,
                       ),
